@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoBet 2026 | Ultimate Casino Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #a855f7; --secondary: #6366f1; --bg: #05070a; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); }
+        .accent-gradient { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); }
+        .multiplier-text { text-shadow: 0 0 30px rgba(168, 85, 247, 0.5); }
+        
+        @keyframes pulse-green { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+        .win-pulse { animation: pulse-green 1s infinite; }
+        
+        @keyframes slide-in { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .notification { animation: slide-in 0.5s ease-out; }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-5px, -5px); }
+            20%, 40%, 60%, 80% { transform: translate(5px, 5px); }
+        }
+        .shake-effect { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .custom-modal { transition: all 0.3s ease; }
+        .hidden-modal { opacity: 0; visibility: hidden; transform: scale(0.95); }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Top Navigation -->
+    <nav class="glass sticky top-0 z-50 flex justify-between items-center px-4 md:px-10 py-4">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 accent-gradient rounded-xl flex items-center justify-center shadow-lg">
+                <i class="fas fa-bolt text-white text-xl"></i>
+            </div>
+            <span class="text-2xl font-black tracking-tighter italic">NEOBET<span class="text-purple-500">26</span></span>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div id="userProfile" class="hidden md:flex items-center gap-3 bg-white/5 px-4 py-2 rounded-2xl border border-white/10">
+                <div class="text-right">
+                    <p id="userNameDisplay" class="text-xs font-black uppercase tracking-widest">Jogador</p>
+                    <div class="w-24 h-1.5 bg-white/10 rounded-full mt-1 overflow-hidden">
+                        <div id="xpBar" class="h-full accent-gradient" style="width: 30%"></div>
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xs">LV1</div>
+            </div>
+
+            <div class="flex flex-col items-end">
+                <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Saldo</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-green-500 text-sm font-bold">R$</span>
+                    <span id="balance" class="text-xl font-black tabular-nums">1.000,00</span>
+                </div>
+            </div>
+            
+            <div class="flex gap-2">
+                <button onclick="openModal('depositModal')" class="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-xl font-bold text-xs transition-all shadow-xl">DEPOSITAR</button>
+                <button onclick="openModal('withdrawModal')" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-xl font-bold text-xs transition-all shadow-xl">SACAR</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8">
+        <div class="grid lg:grid-cols-12 gap-8">
+            
+            <!-- Painel Esquerdo -->
+            <div class="lg:col-span-4 space-y-6">
+                <div id="regCard" class="glass p-6 rounded-[2rem] border-purple-500/30 bg-purple-500/5">
+                    <h3 class="font-black text-sm mb-2 flex items-center gap-2">
+                        <i class="fas fa-user-plus text-purple-500"></i> COMPLETE SEU CADASTRO
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-4">Cadastre-se para habilitar saques instantâneos via Pix.</p>
+                    <button onclick="openModal('authModal')" class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 font-bold text-xs transition">CADASTRAR AGORA</button>
+                </div>
+
+                <div class="glass p-8 rounded-[2rem] shadow-2xl relative overflow-hidden">
+                    <h2 class="text-xl font-black mb-6 flex items-center gap-3">
+                        <span class="w-2 h-6 bg-purple-500 rounded-full"></span> MINI CRASH
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-2 block">Valor da Aposta</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">R$</span>
+                                <input id="betAmount" type="number" value="10.00" step="1" class="w-full bg-black/60 border border-white/5 rounded-2xl p-4 pl-10 focus:outline-none focus:border-purple-500/50 text-2xl font-black transition-all">
+                            </div>
+                            <div class="grid grid-cols-4 gap-2 mt-3">
+                                <button onclick="adjustBet(0.5)" class="bg-white/5 hover:bg-white/10 py-2 rounded-lg text-xs font-bold transition">½</button>
+                                <button onclick="adjustBet(2)" class="bg-white/5 hover:bg-white/10 py-2 rounded-lg text-xs font-bold transition">2x</button>
+                                <button onclick="setBet(10)" class="bg-white/5 hover:bg-white/10 py-2 rounded-lg text-xs font-bold transition">10</button>
+                                <button onclick="setBet(50)" class="bg-white/5 hover:bg-white/10 py-2 rounded-lg text-xs font-bold transition">50</button>
+                            </div>
+                        </div>
+
+                        <button id="btnPlay" onclick="startGame()" class="w-full accent-gradient py-5 rounded-[1.5rem] font-black text-xl shadow-lg hover:shadow-purple-500/20 hover:-translate-y-1 active:scale-95 transition-all duration-300">
+                            COMEÇAR JOGO
+                        </button>
+                    </div>
+
+                    <div class="mt-10">
+                        <h3 class="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-4">Histórico</h3>
+                        <div id="history" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Display do Jogo -->
+            <div id="gameDisplay" class="lg:col-span-8 relative overflow-hidden glass rounded-[2.5rem] min-h-[550px] flex flex-col items-center justify-center border-2 border-white/5">
+                <div id="statusLabel" class="absolute top-10 text-gray-400 font-black uppercase tracking-[0.3em] text-xs">Aguardando sua aposta...</div>
+                
+                <div id="liveProfitBadge" class="absolute top-20 bg-green-500/20 border border-green-500/30 px-4 py-2 rounded-full opacity-0 transition-all duration-300">
+                    <span class="text-[10px] font-black text-green-400 uppercase mr-2">Lucro Atual:</span>
+                    <span id="currentProfit" class="text-lg font-black text-white tabular-nums">R$ 0,00</span>
+                </div>
+
+                <div class="relative z-10 flex flex-col items-center">
+                    <div id="multiplierDisplay" class="text-9xl md:text-[13rem] font-black text-white italic multiplier-text transition-all duration-100 tabular-nums">1.00x</div>
+                </div>
+                
+                <canvas id="gameCanvas" class="absolute bottom-0 left-0 w-full h-full pointer-events-none opacity-40"></canvas>
+                
+                <div id="crashOverlay" class="absolute inset-0 bg-red-600/10 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center">
+                    <span class="text-red-500 text-6xl font-black italic uppercase tracking-tighter">CRASHED!</span>
+                </div>
+
+                <div id="notificationArea" class="absolute bottom-6 right-6 flex flex-col gap-2 items-end pointer-events-none"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modais -->
+    <div id="authModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md custom-modal hidden-modal">
+        <div class="glass p-8 rounded-[2.5rem] max-w-md w-full mx-4 relative border border-purple-500/30">
+            <button onclick="closeModal('authModal')" class="absolute top-6 right-6 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+            <div class="text-center mb-8"><h2 class="text-2xl font-black italic">CRIAR CONTA</h2></div>
+            <div class="space-y-4">
+                <input id="regName" type="text" placeholder="Nome Completo" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 outline-none">
+                <input id="regPix" type="text" placeholder="Chave Pix para Saque" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 outline-none">
+                <button onclick="handleRegister()" class="w-full accent-gradient py-4 rounded-xl font-black text-sm">FINALIZAR CADASTRO</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="depositModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md custom-modal hidden-modal">
+        <div class="glass p-8 rounded-[2.5rem] max-w-md w-full mx-4 relative border border-purple-500/30">
+            <button onclick="closeModal('depositModal')" class="absolute top-6 right-6 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+            <div class="text-center mb-8"><h2 class="text-2xl font-black italic">DEPOSITAR VIA PIX</h2></div>
+            <div class="bg-black/40 p-6 rounded-2xl border border-white/5 text-center mb-6">
+                <p class="text-[10px] text-gray-500 font-black uppercase mb-2">Chave Pix (Celular)</p>
+                <p class="text-xl font-black text-purple-400 tracking-wider">27550134863</p>
+                <p class="text-xs text-gray-500 mt-2 font-bold italic">Banco: Itaú</p>
+            </div>
+            <button onclick="navigator.clipboard.writeText('27550134863'); alert('Copiado!')" class="w-full bg-white text-black py-4 rounded-xl font-black text-sm">COPIAR CHAVE PIX</button>
+        </div>
+    </div>
+
+    <div id="withdrawModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md custom-modal hidden-modal">
+        <div class="glass p-8 rounded-[2.5rem] max-w-md w-full mx-4 relative border border-purple-500/30">
+            <button onclick="closeModal('withdrawModal')" class="absolute top-6 right-6 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+            <div class="text-center mb-8"><h2 class="text-2xl font-black italic">SOLICITAR SAQUE</h2></div>
+            <div class="space-y-4">
+                <input id="withdrawAmount" type="number" placeholder="Valor R$" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 outline-none text-xl font-black">
+                <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                    <p class="text-[10px] text-gray-500 font-black uppercase">Chave Pix Destino:</p>
+                    <p id="userPixKey" class="text-sm font-bold text-gray-300 italic">Nenhuma chave cadastrada</p>
+                </div>
+                <button onclick="handleWithdraw()" class="w-full bg-green-600 py-4 rounded-xl font-black text-sm">CONFIRMAR SAQUE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Áudios -->
+    <audio id="soundTick" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="soundWin" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="soundLose" src="https://assets.mixkit.co/active_storage/sfx/251/251-preview.mp3"></audio>
+    <audio id="soundStart" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script>
+        let balance = 1000.00;
+        let isPlaying = false;
+        let multiplier = 1.00;
+        let gameInterval;
+        let graphPoints = [];
+        let user = { name: "Jogador", pix: "", xp: 30, loggedIn: false };
+        
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const sounds = { tick: document.getElementById('soundTick'), win: document.getElementById('soundWin'), lose: document.getElementById('soundLose'), start: document.getElementById('soundStart') };
+
+        function updateBalanceDisplay() { document.getElementById('balance').innerText = balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 }); }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden-modal'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden-modal'); }
+        function adjustBet(f) { const i = document.getElementById('betAmount'); i.value = (parseFloat(i.value) * f).toFixed(2); }
+        function setBet(v) { document.getElementById('betAmount').value = v.toFixed(2); }
+        function playSound(n) { sounds[n].currentTime = 0; sounds[n].play().catch(()=>{}); }
+
+        function handleRegister() {
+            const n = document.getElementById('regName').value;
+            const p = document.getElementById('regPix').value;
+            if(!n || !p) return alert("Preencha tudo!");
+            user = { name: n, pix: p, loggedIn: true, xp: 30 };
+            document.getElementById('userNameDisplay').innerText = n;
+            document.getElementById('userPixKey').innerText = p;
+            document.getElementById('regCard').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+            closeModal('authModal');
+        }
+
+        function handleWithdraw() {
+            if(!user.loggedIn) return alert("Cadastre-se primeiro!");
+            const a = parseFloat(document.getElementById('withdrawAmount').value);
+            if(a > balance || a <= 0) return alert("Valor inválido!");
+            balance -= a; updateBalanceDisplay(); closeModal('withdrawModal');
+            alert("Saque solicitado!");
+        }
+
+        function drawGraph() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (graphPoints.length < 2) return;
+            ctx.beginPath(); ctx.lineWidth = 5; ctx.strokeStyle = '#a855f7'; ctx.moveTo(0, canvas.height);
+            for (let i = 0; i < graphPoints.length; i++) {
+                const x = (i / 200) * canvas.width;
+                const y = canvas.height - ((graphPoints[i] - 1) * 60);
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        function startGame() {
+            const betValue = parseFloat(document.getElementById('betAmount').value);
+            const btn = document.getElementById('btnPlay');
+            const multDisp = document.getElementById('multiplierDisplay');
+            const profitBadge = document.getElementById('liveProfitBadge');
+
+            if(isPlaying) {
+                balance += betValue * multiplier; updateBalanceDisplay();
+                isPlaying = false; clearInterval(gameInterval); playSound('win');
+                btn.innerText = "COMEÇAR JOGO"; btn.classList.replace('bg-green-600', 'accent-gradient');
+                multDisp.classList.add('text-green-400', 'win-pulse'); profitBadge.classList.add('opacity-0');
+                addToHistory(multiplier.toFixed(2), 'bg-green-500/20 text-green-400 border-green-500/50');
+                setTimeout(resetGameUI, 3000); return;
+            }
+
+            if (betValue > balance || betValue <= 0) return alert("Saldo insuficiente!");
+            balance -= betValue; updateBalanceDisplay(); playSound('start');
+            isPlaying = true; multiplier = 1.00; graphPoints = [1.00];
+            btn.innerText = "PARAR (CASHOUT)"; btn.classList.replace('accent-gradient', 'bg-green-600');
+            multDisp.classList.remove('text-green-400', 'text-red-500', 'win-pulse');
+            document.getElementById('crashOverlay').classList.add('opacity-0');
+            profitBadge.classList.remove('opacity-0');
+
+            const crashPoint = 1.00 + (Math.random() * 4) + (Math.random() > 0.9 ? Math.random() * 10 : 0);
+            let startTime = Date.now(); let lastTick = 1.00;
+
+            gameInterval = setInterval(() => {
+                multiplier = Math.pow(1.07, ((Date.now() - startTime) / 1000) * 5);
+                multDisp.innerText = multiplier.toFixed(2) + "x";
+                document.getElementById('currentProfit').innerText = `R$ ${(betValue * multiplier).toFixed(2)}`;
+                if (multiplier - lastTick >= 0.5) { playSound('tick'); lastTick = multiplier; }
+                graphPoints.push(multiplier); drawGraph();
+                if (multiplier >= crashPoint) {
+                    isPlaying = false; clearInterval(gameInterval); playSound('lose');
+                    document.getElementById('gameDisplay').classList.add('shake-effect');
+                    setTimeout(() => document.getElementById('gameDisplay').classList.remove('shake-effect'), 500);
+                    multDisp.classList.add('text-red-500'); document.getElementById('crashOverlay').classList.remove('opacity-0');
+                    profitBadge.classList.add('opacity-0'); btn.innerText = "COMEÇAR JOGO";
+                    btn.classList.replace('bg-green-600', 'accent-gradient');
+                    addToHistory(multiplier.toFixed(2), 'bg-red-500/20 text-red-400 border-red-500/50');
+                    setTimeout(resetGameUI, 3000);
+                }
+            }, 50);
+        }
+
+        function resetGameUI() {
+            if (isPlaying) return;
+            document.getElementById('multiplierDisplay').classList.remove('text-green-400', 'text-red-500', 'win-pulse');
+            document.getElementById('multiplierDisplay').innerText = "1.00x";
+            document.getElementById('crashOverlay').classList.add('opacity-0');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function addToHistory(v, c) {
+            const i = document.createElement('div'); i.className = `${c} px-4 py-1.5 rounded-xl font-black text-xs border`;
+            i.innerText = v + "x"; document.getElementById('history').prepend(i);
+        }
+
+        setInterval(() => {
+            if(Math.random() > 0.8) {
+                const n = ["Marcos", "Ana", "Gamer", "Pix", "Sorte"][Math.floor(Math.random()*5)];
+                const m = (1.5 + Math.random()*5).toFixed(2);
+                const d = document.createElement('div'); d.className = "notification glass px-4 py-2 rounded-xl border-green-500/30 flex items-center gap-3 shadow-lg";
+                d.innerHTML = `<div class="w-2 h-2 bg-green-500 rounded-full animate-ping"></div><p class="text-[10px] font-bold"><span class="text-gray-400">${n}</span> <span class="text-green-400">ganhou ${m}x</span></p>`;
+                document.getElementById('notificationArea').appendChild(d); setTimeout(() => d.remove(), 3000);
+            }
+        }, 4000);
+
+        canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; updateBalanceDisplay();
+    </script>
+</body>
+</html>
