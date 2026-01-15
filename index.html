@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoBet 2026 | Premium Casino Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            background: #05070a; 
+            color: #fff; 
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255,255,255,0.08); 
+        }
+        .accent-gradient { 
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); 
+        }
+        .accent-gradient:hover {
+            background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+        }
+        .multiplier-text {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .crash-anim {
+            animation: pulse-red 0.2s infinite;
+            color: #ef4444;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .shake-effect {
+            animation: shake 0.5s;
+            animation-iteration-count: infinite;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0e11; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        #depositModal {
+            transition: opacity 0.3s ease, visibility 0.3s;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header / Navbar -->
+    <nav class="glass sticky top-0 z-50 flex justify-between items-center px-4 md:px-10 py-4">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 accent-gradient rounded-xl flex items-center justify-center shadow-lg">
+                <i class="fas fa-bolt text-white text-xl"></i>
+            </div>
+            <span class="text-2xl font-black tracking-tighter italic">NEOBET<span class="text-purple-500">26</span></span>
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-6">
+            <div class="hidden sm:flex flex-col items-end">
+                <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Saldo Disponível</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-green-500 text-sm font-bold">R$</span>
+                    <span id="balance" class="text-xl font-black tabular-nums">1.000,00</span>
+                </div>
+            </div>
+            <button onclick="toggleDepositModal()" class="bg-white text-black hover:bg-gray-200 px-6 py-2.5 rounded-xl font-bold text-sm transition-all transform active:scale-95 shadow-xl">
+                DEPOSITAR
+            </button>
+        </div>
+    </nav>
+
+    <main id="mainContent" class="max-w-7xl mx-auto p-4 md:p-8">
+        <div class="grid lg:grid-cols-12 gap-8">
+            
+            <!-- Painel de Apostas -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass p-8 rounded-[2rem] shadow-2xl relative overflow-hidden">
+                    <h2 class="text-xl font-black mb-6 flex items-center gap-3">
+                        <span class="w-2 h-6 bg-purple-500 rounded-full"></span>
+                        MINI CRASH
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-[10px] text-gray-400 uppercase font-black tracking-widest">Valor da Aposta</label>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">R$</span>
+                                <input id="betAmount" type="number" value="10.00" step="1" class="w-full bg-black/60 border border-white/5 rounded-2xl p-4 pl-10 focus:outline-none focus:border-purple-500/50 text-2xl font-black transition-all">
+                            </div>
+                            <div class="grid grid-cols-4 gap-2 mt-3">
+                                <button onclick="adjustBet(0.5)" class="bg-white/5 hover:bg-white/10 py-2 rounded-lg text-xs font-bold transition">½</button>
+                                <button onclick="adjustBet(2)" class="bg-white/5 hover:bg-white/10 py-2 rounded-lg text-xs font-bold transition">2x</button>
+                                <button onclick="setBet(10)" class="bg-white/5 hover:bg-white/10 py-2 rounded-lg text-xs font-bold transition">10</button>
+                                <button onclick="setBet(50)" class="bg-white/5 hover:bg-white/10 py-2 rounded-lg text-xs font-bold transition">50</button>
+                            </div>
+                        </div>
+
+                        <button id="btnPlay" onclick="startGame()" class="w-full accent-gradient py-5 rounded-[1.5rem] font-black text-xl shadow-lg hover:shadow-purple-500/20 hover:-translate-y-1 active:scale-95 transition-all duration-300">
+                            COMEÇAR JOGO
+                        </button>
+                    </div>
+
+                    <div class="mt-10">
+                        <h3 class="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-4">Últimos Resultados</h3>
+                        <div id="history" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Display do Multiplicador -->
+            <div id="gameDisplay" class="lg:col-span-8 relative overflow-hidden glass rounded-[2.5rem] min-h-[500px] flex flex-col items-center justify-center border-2 border-white/5">
+                <div id="statusLabel" class="absolute top-10 text-gray-400 font-black uppercase tracking-[0.3em] text-xs">Aguardando sua aposta...</div>
+                
+                <div class="relative z-10 flex flex-col items-center">
+                    <div id="multiplierDisplay" class="text-9xl md:text-[12rem] font-black text-white italic multiplier-text transition-all duration-100 tabular-nums">1.00x</div>
+                    <div id="winAmount" class="text-2xl font-bold text-green-400 opacity-0 transform translate-y-4 transition-all duration-300">R$ 0.00</div>
+                </div>
+                
+                <canvas id="gameCanvas" class="absolute bottom-0 left-0 w-full h-full pointer-events-none opacity-40"></canvas>
+                
+                <div id="crashOverlay" class="absolute inset-0 bg-red-600/10 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center">
+                    <span class="text-red-500 text-6xl font-black italic uppercase tracking-tighter">CRASHED!</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Depósito -->
+    <div id="depositModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md opacity-0 invisible">
+        <div class="glass p-8 rounded-[2.5rem] max-w-md w-full mx-4 relative border border-purple-500/30 shadow-2xl">
+            <button onclick="toggleDepositModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-qrcode text-purple-500 text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-black italic">DEPOSITAR VIA PIX</h2>
+                <p class="text-gray-400 text-sm mt-2">Envie o valor desejado para a chave abaixo</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-black/40 p-6 rounded-2xl border border-white/5 text-center">
+                    <p class="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-2">Chave Pix (Celular)</p>
+                    <p id="pixKey" class="text-xl font-black text-purple-400 tracking-wider">27550134863</p>
+                    <p class="text-xs text-gray-500 mt-2 font-bold italic">Banco: Itaú</p>
+                </div>
+
+                <button onclick="copyPix()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-sm hover:bg-gray-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fas fa-copy"></i> COPIAR CHAVE PIX
+                </button>
+
+                <div class="flex items-center gap-3 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                    <i class="fas fa-info-circle text-blue-500"></i>
+                    <p class="text-[10px] text-blue-200 leading-tight">Após o pagamento, o saldo será creditado automaticamente em sua conta em até 2 minutos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="soundTick" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="soundWin" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="soundLose" src="https://assets.mixkit.co/active_storage/sfx/251/251-preview.mp3"></audio>
+    <audio id="soundStart" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script>
+        let balance = 1000.00;
+        let isPlaying = false;
+        let multiplier = 1.00;
+        let gameInterval;
+        let graphPoints = [];
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Audio Setup
+        const sounds = {
+            tick: document.getElementById('soundTick'),
+            win: document.getElementById('soundWin'),
+            lose: document.getElementById('soundLose'),
+            start: document.getElementById('soundStart')
+        };
+
+        function playSound(name) {
+            sounds[name].currentTime = 0;
+            sounds[name].play().catch(e => console.log("Audio play blocked"));
+        }
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function updateBalanceDisplay() {
+            const formatted = balance.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('balance').innerText = formatted;
+        }
+
+        function adjustBet(factor) {
+            const input = document.getElementById('betAmount');
+            input.value = (parseFloat(input.value) * factor).toFixed(2);
+        }
+
+        function setBet(val) {
+            document.getElementById('betAmount').value = val.toFixed(2);
+        }
+
+        function toggleDepositModal() {
+            const modal = document.getElementById('depositModal');
+            if (modal.classList.contains('invisible')) {
+                modal.classList.remove('invisible', 'opacity-0');
+            } else {
+                modal.classList.add('invisible', 'opacity-0');
+            }
+        }
+
+        function copyPix() {
+            const key = document.getElementById('pixKey').innerText;
+            navigator.clipboard.writeText(key);
+            alert("Chave Pix copiada com sucesso!");
+        }
+
+        function drawGraph() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (graphPoints.length < 2) return;
+            ctx.beginPath();
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#a855f7';
+            ctx.moveTo(0, canvas.height);
+            for (let i = 0; i < graphPoints.length; i++) {
+                const x = (i / 200) * canvas.width;
+                const y = canvas.height - ((graphPoints[i] - 1) * 50);
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        function startGame() {
+            const betInput = document.getElementById('betAmount');
+            const betValue = parseFloat(betInput.value);
+            const btn = document.getElementById('btnPlay');
+            const statusLabel = document.getElementById('statusLabel');
+            const multiplierDisplay = document.getElementById('multiplierDisplay');
+            const winAmount = document.getElementById('winAmount');
+            const crashOverlay = document.getElementById('crashOverlay');
+            const gameDisplay = document.getElementById('gameDisplay');
+
+            if(isPlaying) {
+                const profit = betValue * multiplier;
+                balance += profit;
+                updateBalanceDisplay();
+                isPlaying = false;
+                clearInterval(gameInterval);
+                playSound('win');
+                btn.innerText = "COMEÇAR JOGO";
+                btn.classList.replace('bg-green-600', 'accent-gradient');
+                statusLabel.innerText = "CASHOUT REALIZADO!";
+                statusLabel.classList.add('text-green-400');
+                multiplierDisplay.classList.add('text-green-400');
+                addToHistory(multiplier.toFixed(2), 'bg-green-500/20 text-green-400 border-green-500/50');
+                setTimeout(resetGameUI, 3000);
+                return;
+            }
+
+            if (betValue > balance || betValue <= 0) return alert("Saldo insuficiente!");
+
+            balance -= betValue;
+            updateBalanceDisplay();
+            playSound('start');
+            isPlaying = true;
+            multiplier = 1.00;
+            graphPoints = [1.00];
+            btn.innerText = "PARAR (CASHOUT)";
+            btn.classList.replace('accent-gradient', 'bg-green-600');
+            statusLabel.innerText = "O FOGUETE ESTÁ SUBINDO!";
+            statusLabel.classList.remove('text-green-400', 'text-red-500');
+            multiplierDisplay.classList.remove('text-green-400', 'text-red-500');
+            
+            const crashPoint = 1.00 + (Math.random() * 5);
+            let startTime = Date.now();
+            let lastTick = 1.00;
+
+            gameInterval = setInterval(() => {
+                let elapsed = (Date.now() - startTime) / 1000;
+                multiplier = Math.pow(1.06, elapsed * 5);
+                multiplierDisplay.innerText = multiplier.toFixed(2) + "x";
+                winAmount.innerText = `R$ ${(betValue * multiplier).toFixed(2)}`;
+                winAmount.classList.remove('opacity-0');
+                if (multiplier - lastTick >= 0.5) {
+                    playSound('tick');
+                    lastTick = multiplier;
+                }
+                graphPoints.push(multiplier);
+                drawGraph();
+
+                if (multiplier >= crashPoint) {
+                    isPlaying = false;
+                    clearInterval(gameInterval);
+                    playSound('lose');
+                    gameDisplay.classList.add('shake-effect');
+                    setTimeout(() => gameDisplay.classList.remove('shake-effect'), 1000);
+                    multiplierDisplay.classList.add('crash-anim');
+                    statusLabel.innerText = "CRASHOU!";
+                    statusLabel.classList.add('text-red-500');
+                    crashOverlay.classList.remove('opacity-0');
+                    btn.innerText = "COMEÇAR JOGO";
+                    btn.classList.replace('bg-green-600', 'accent-gradient');
+                    addToHistory(multiplier.toFixed(2), 'bg-red-500/20 text-red-400 border-red-500/50');
+                    setTimeout(resetGameUI, 3000);
+                }
+            }, 50);
+        }
+
+        function resetGameUI() {
+            if (isPlaying) return;
+            document.getElementById('multiplierDisplay').classList.remove('crash-anim', 'text-green-400', 'text-red-500');
+            document.getElementById('multiplierDisplay').innerText = "1.00x";
+            document.getElementById('statusLabel').innerText = "Aguardando sua aposta...";
+            document.getElementById('statusLabel').classList.remove('text-green-400', 'text-red-500');
+            document.getElementById('winAmount').classList.add('opacity-0');
+            document.getElementById('crashOverlay').classList.add('opacity-0');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function addToHistory(val, classes) {
+            const item = document.createElement('div');
+            item.className = `${classes} px-4 py-1.5 rounded-xl font-black text-xs border`;
+            item.innerText = val + "x";
+            document.getElementById('history').prepend(item);
+        }
+    </script>
+</body>
+</html>
